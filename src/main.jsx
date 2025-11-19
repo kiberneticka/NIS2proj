@@ -6,10 +6,7 @@ import { I18nextProvider } from 'react-i18next'
 import i18next from 'i18next'
 import hr from './locales/hr.json' 
 import en from './locales/en.json' 
-import de from './locales/de.json' 
-import it from './locales/it.json' 
-import sl from './locales/sl.json' 
-import es from './locales/es.json' 
+
 
 // Dodajte minimalne potrebne prijevode ako ne postoje
 if (!hr.translation) {
