@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';  // <-- nova import
 import { useTranslation } from 'react-i18next';
 
 export default function Login({ onLogin }) {
@@ -7,7 +7,8 @@ export default function Login({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-  const history = useHistory();
+
+  const navigate = useNavigate();  // <-- zamjena za useHistory
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,18 +16,21 @@ export default function Login({ onLogin }) {
 
     try {
       await onLogin(email, password);
-      // Uspješna prijava, preusmjeri na dashboard
-      history.push('/app');
+      // Uspješna prijava → preusmjeravanje na /app
+      navigate('/app');               // <-- nova sintaksa
+      // ili ako želiš zamijeniti trenutnu stavku u povijesti:
+      // navigate('/app', { replace: true });
     } catch (err) {
-      // Prikazivanje Firebase greške
       let errorMessage = t('loginError');
+
       if (err.code === 'auth/wrong-password') {
         errorMessage = t('wrongPassword');
       } else if (err.code === 'auth/user-not-found') {
         errorMessage = t('userNotFound');
       }
+
       setError(errorMessage);
-      console.error("Login error:", err);
+      console.error('Login error:', err);
     }
   };
 
@@ -36,7 +40,7 @@ export default function Login({ onLogin }) {
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           {t('signInTitle')}
         </h2>
-        
+
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
             <span className="block sm:inline">{error}</span>
