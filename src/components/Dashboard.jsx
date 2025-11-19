@@ -3,19 +3,28 @@ import { useTranslation } from 'react-i18next';
 import { Download, ChevronDown, ChevronUp } from 'lucide-react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 
-// Definiranje konstante statusa koja je bila uzrok greške
-const STATUS_COLORS = { "Nije započeto": "#9CA3AF", "Neusklađeno": "#EF4444", "Djelomično": "#F59E0B", "Usklađeno": "#10B981" };
+// Definiranje konstante statusa
+const STATUS_COLORS = { 
+  "Nije započeto": "#9CA3AF", 
+  "Neusklađeno": "#EF4444", 
+  "Djelomično": "#F59E0B", 
+  "Usklađeno": "#10B981" 
+};
 
 
 export default function Dashboard({ data, onDataChange, isPro, onPdfExport }) {
-  const { t } = useTranslation();
-  const [expanded, setExpanded] = useState(null);
+  // 1. 💥 PROVJERA - Osigurava da je 'data' uvijek niz (array)
+  const complianceData = data || []; 
 
-  const total = data.length;
-  const compliance = total > 0 ? Math.round(data.filter(i => i.status === t("Usklađeno")).length / total * 100) : 0;
-  
-  // Podaci za Pie Chart
-  const statusCounts = data.reduce((acc, item) => {
+  const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(null);
+
+  const total = complianceData.length;
+  // Sada koristimo complianceData umjesto data
+  const compliance = total > 0 ? Math.round(complianceData.filter(i => i.status === t("Usklađeno")).length / total * 100) : 0;
+    
+  // Podaci za Pie Chart (koristimo complianceData)
+  const statusCounts = complianceData.reduce((acc, item) => {
     // Koristimo i18n key za prebrojavanje
     acc[item.status] = (acc[item.status] || 0) + 1;
     return acc;
@@ -29,14 +38,14 @@ export default function Dashboard({ data, onDataChange, isPro, onPdfExport }) {
   })).filter(item => item.value > 0);
 
 
-  return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 text-center">
-        <h1 className="text-4xl font-bold mb-4">{t('title')}</h1>
-        <div className="text-6xl font-bold text-blue-600">{compliance}%</div>
-        <p className="text-xl text-gray-600">{t('compliance')}</p>
-        {!isPro && <p className="mt-4 text-orange-600 font-bold">{t('demoLimit')}</p>}
-      </div>
+  return (
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 text-center">
+        <h1 className="text-4xl font-bold mb-4">{t('title')}</h1>
+        <div className="text-6xl font-bold text-blue-600">{compliance}%</div>
+        <p className="text-xl text-gray-600">{t('compliance')}</p>
+        {!isPro && <p className="mt-4 text-orange-600 font-bold">{t('demoLimit')}</p>}
+      </div>
 
       {/* Grafikon */}
       <div className="bg-white rounded-2xl shadow-lg p-8 mb-8">
@@ -65,21 +74,21 @@ export default function Dashboard({ data, onDataChange, isPro, onPdfExport }) {
           </ResponsiveContainer>
         </div>
       </div>
-      
+        
       {/* Lista kontrola */}
-      <div className="space-y-4">
-        {data.map(item => (
-          <div key={item.id} className="bg-white rounded-xl shadow p-6 border">
-            <div onClick={() => setExpanded(expanded === item.id ? null : item.id)} className="cursor-pointer flex justify-between items-center">
-              <div>
-                <span className="text-sm text-gray-500">{item.category}</span>
-                <h3 className="text-lg font-semibold">{item.requirement}</h3>
-              </div>
-              <span className={`px-4 py-2 rounded-full text-white text-sm font-bold flex items-center gap-2`}
-                style={{backgroundColor: STATUS_COLORS[item.status] || '#888'}}>
-                {t(item.status)} {expanded === item.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-              </span>
-            </div>
+      <div className="space-y-4">
+        {complianceData.map(item => ( // Koristimo complianceData
+          <div key={item.id} className="bg-white rounded-xl shadow p-6 border">
+            <div onClick={() => setExpanded(expanded === item.id ? null : item.id)} className="cursor-pointer flex justify-between items-center">
+              <div>
+                <span className="text-sm text-gray-500">{item.category}</span>
+                <h3 className="text-lg font-semibold">{item.requirement}</h3>
+              </div>
+              <span className={`px-4 py-2 rounded-full text-white text-sm font-bold flex items-center gap-2`}
+                style={{backgroundColor: STATUS_COLORS[item.status] || '#888'}}>
+                {t(item.status)} {expanded === item.id ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+              </span>
+            </div>
             {/* Prošireni detalji */}
             {expanded === item.id && (
                 <div className="mt-4 pt-4 border-t space-y-3">
@@ -105,17 +114,17 @@ export default function Dashboard({ data, onDataChange, isPro, onPdfExport }) {
                     </div>
                 </div>
             )}
-          </div>
-        ))}
-      </div>
+          </div>
+        ))}
+      </div>
 
-      <div className="text-center mt-10">
-        <button 
+      <div className="text-center mt-10">
+        <button 
             onClick={onPdfExport} 
             className="bg-green-600 hover:bg-green-700 transition-colors text-white px-8 py-4 rounded-xl text-xl font-bold flex items-center gap-3 mx-auto">
-          <Download /> Preuzmi PDF Izvještaj
-        </button>
-      </div>
-    </div>
-  );
+          <Download /> Preuzmi PDF Izvještaj
+        </button>
+      </div>
+    </div>
+  );
 }
