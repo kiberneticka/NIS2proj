@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  // 💥 DODAJTE OVU LINIJU ZA RELATIVNE PUTANJE ZA HOSTING
-  base: './' 
+  // 💥 Korištenje praznog stringa ("") osigurava RELATIVNU putanju (./)
+  // što je najpouzdaniji način za Netlify/GitHub Pages.
+  base: '' 
 })
