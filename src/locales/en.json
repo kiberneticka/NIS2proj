@@ -1,0 +1,22 @@
+{
+  "title": "NIS2 GAP Analysis Tool",
+  "demo": "FREE DEMO",
+  "startDemo": "Start free demo now",
+  "pro": "PRO €19/month",
+  "upgrade": "Upgrade to full version",
+  "login": "Login",
+  "register": "Register",
+  "email": "Email",
+  "password": "Password",
+  "noAccount": "No account? Register",
+  "hasAccount": "Already have account? Login",
+  "logout": "Logout",
+  "compliance": "Compliance",
+  "subtasks": "Subtasks",
+  "critical": "Critical risks",
+  "notStarted": "Not Started",
+  "nonCompliant": "Non-compliant",
+  "partial": "Partially",
+  "compliant": "Compliant",
+  "demoLimit": "DEMO version – you see only first 6 of 18 controls"
+}
