@@ -10,29 +10,29 @@ export default function Login({ onLogin }) {
 
   const navigate = useNavigate();  // <-- zamjena za useHistory
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setError(null);
 
-    try {
-      await onLogin(email, password);
-      // Uspješna prijava → preusmjeravanje na /app
-      navigate('/app');               // <-- nova sintaksa
-      // ili ako želiš zamijeniti trenutnu stavku u povijesti:
-      // navigate('/app', { replace: true });
-    } catch (err) {
-      let errorMessage = t('loginError');
+  try {
+    await onLogin(email, password);
+    navigate('/app');
+  } catch (err) {
+    let errorMessage = t('loginError');  // Default: "Greška pri prijavi"
 
-      if (err.code === 'auth/wrong-password') {
-        errorMessage = t('wrongPassword');
-      } else if (err.code === 'auth/user-not-found') {
-        errorMessage = t('userNotFound');
-      }
-
-      setError(errorMessage);
-      console.error('Login error:', err);
+    // Specifični errorovi
+    if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+      errorMessage = t('wrongPassword') || 'Pogrešna lozinka. Pokušaj ponovno.';
+    } else if (err.code === 'auth/user-not-found') {
+      errorMessage = t('userNotFound') || 'Korisnik nije pronađen. Registriraj se ili koristi demo: demo@nis2.com / demo123';
+    } else if (err.code === 'auth/invalid-email') {
+      errorMessage = 'Nevažeći email format.';
     }
-  };
+
+    setError(errorMessage);
+    console.error('Login error:', err.code, err.message);  // Dodaj ovo za debug
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -91,6 +91,19 @@ export default function Login({ onLogin }) {
               {t('signInButton')}
             </button>
           </div>
+<div className="mt-4">
+  <button
+    type="button"  // Ne submit, već direktno
+    onClick={() => {
+      setEmail('demo@nis2.com');
+      setPassword('demo123');
+      // Ili automatski submit: handleSubmit({ preventDefault: () => {} });
+    }}
+    className="w-full py-2 px-4 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-gray-50 hover:bg-gray-100 transition"
+  >
+    Popuni demo podatke
+  </button>
+</div>
         </form>
       </div>
     </div>
