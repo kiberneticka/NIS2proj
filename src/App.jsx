@@ -161,14 +161,16 @@ export default function App() {
 
   {/* Protected /app */}
   <Route
-    path="/app"
-    element={
-      currentUser ? (
-        <Dashboard data={data} onDataChange={saveData} isPro={isPro} onPdfExport={generatePdf} />
-      ) : (
-        <Navigate to="/login" replace />
-      )
-    }
+  path="/app"
+  element={
+    currentUser ? (
+      <Dashboard data={data} onDataChange={saveData} isPro={true} onPdfExport={generatePdf} />
+    ) : (
+      // Bypasuj login za demo
+      <Dashboard data={initialData} onDataChange={() => {}} isPro={true} onPdfExport={generatePdf} />
+    )
+  }
+/>
   />
 
   {/* Custom 404 za sve ostalo */}
