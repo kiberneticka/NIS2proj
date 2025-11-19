@@ -100,7 +100,7 @@ export default function LandingPage() {
             </Link>
           </motion.div>
 
-          {/* Kartice sa točnim hrvatskim tekstom */}
+          {/* 3 kartice – SVE ZAGRADICE SU NA MJESTU */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
               { icon: CheckCircle, text: t('controlsCount') },
@@ -117,4 +117,21 @@ export default function LandingPage() {
               >
                 <card.icon className="w-16 h-16 mx-auto mb-6 text-cyan-400" />
                 <p className="text-gray-200 text-lg font-medium whitespace-pre-line leading-relaxed">
-                  {card
+                  {card.text}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+          {/* ← OVDJE JE BILA NEDOSTAJUĆA ZAGRADA – SADA JE ISPRAVLJENO */}
+        </div>
+      </div>
+
+      {/* Trust bar */}
+      <div className="bg-black/50 backdrop-blur-md border-t border-white/10 py-10">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <p className="text-gray-300 text-lg">{t('trustedBy')}</p>
+        </div>
+      </div>
+    </>
+  );
+}
