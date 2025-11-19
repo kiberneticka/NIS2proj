@@ -147,46 +147,49 @@ export default function App() {
         <Header currentUser={currentUser} onLogout={handleLogout} />
 
         <main className="flex-grow bg-gray-50">
-          <Routes>
-            {/* Početna stranica */}
-            <Route path="/" element={<LandingPage />} />
+         <Routes>
+  {/* Root ruta - uvijek prikazuje landing page */}
+  <Route 
+    path="/" 
+    element={
+      <LandingPage />  // Ako nemaš ovu komponentu, zamijeni s nečim jednostavnim (vidi dolje)
+    } 
+  />
 
-            {/* Login stranica */}
-            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+  {/* Login */}
+  <Route path="/login" element={<Login onLogin={handleLogin} />} />
 
-            {/* Zaštićena ruta /app */}
-            <Route
-              path="/app"
-              element={
-                currentUser ? (
-                  <Dashboard
-                    data={data}
-                    onDataChange={saveData}
-                    isPro={isPro}
-                    onPdfExport={generatePdf}
-                  />
-                ) : (
-                  <Navigate to="/login" replace />
-                )
-              }
-            />
+  {/* Protected /app */}
+  <Route
+    path="/app"
+    element={
+      currentUser ? (
+        <Dashboard data={data} onDataChange={saveData} isPro={isPro} onPdfExport={generatePdf} />
+      ) : (
+        <Navigate to="/login" replace />
+      )
+    }
+  />
 
-            {/* Sve ostale rute → 404 */}
-            <Route
-              path="*"
-              element={
-                <div className="max-w-7xl mx-auto p-8 text-center bg-white my-8 rounded-lg shadow-lg">
-                  <h1 className="text-3xl font-bold text-red-600">404 - Stranica nije pronađena</h1>
-                  <p className="mt-4 text-gray-600">
-                    Putanja koju ste tražili ne postoji.{' '}
-                    <a href="/" className="text-blue-600 hover:underline">
-                      Vratite se na početnu stranicu.
-                    </a>
-                  </p>
-                </div>
-              }
-            />
-          </Routes>
+  {/* Custom 404 za sve ostalo */}
+  <Route
+    path="*"
+    element={
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="max-w-md text-center p-8 bg-white rounded-lg shadow-lg">
+          <h1 className="text-4xl font-bold text-red-600 mb-4">404 - Stranica nije pronađena</h1>
+          <p className="text-gray-600 mb-6">Opa, izgleda da si zalutao! Vratimo te kući.</p>
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
+          >
+            Nazad na početak
+          </button>
+        </div>
+      </div>
+    }
+  />
+</Routes>
         </main>
 
         <Footer />
